@@ -1,10 +1,21 @@
 import { Button } from "@/components/ui/button";
 import { Leaf, Sparkles, Award, Users, ArrowRight, TreePine, Lightbulb, Globe } from "lucide-react";
 import { Link } from "wouter";
+import heroImage from "@assets/stock_images/environmental_educat_4d4916c1.jpg";
 
 export default function Welcome() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-gray-950 dark:via-green-950/20 dark:to-emerald-950/20 relative overflow-hidden">
+      {/* Background Hero Image */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20 dark:opacity-10">
+        <img 
+          src={heroImage} 
+          alt="Environmental Education Background" 
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-green-50/90 via-emerald-50/90 to-teal-50/90 dark:from-gray-950/90 dark:via-green-950/90 dark:to-emerald-950/90" />
+      </div>
+      
       {/* Decorative background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />

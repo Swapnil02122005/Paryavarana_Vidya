@@ -13,6 +13,7 @@ import { useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
+import loginBgImage from "@assets/stock_images/environmental_educat_a1e72754.jpg";
 
 const registerSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters"),
@@ -115,14 +116,24 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen relative flex items-center justify-center p-4 overflow-hidden">
+      {/* Background Image */}
+      <div className="absolute inset-0 z-0">
+        <img 
+          src={loginBgImage} 
+          alt="Environmental Education" 
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-green-900/85 via-emerald-900/80 to-teal-900/85 dark:from-gray-950/90 dark:via-green-950/90 dark:to-emerald-950/90" />
+      </div>
+
+      <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 mb-4">
-            <Leaf className="h-10 w-10 text-primary" />
-            <span className="font-display text-3xl font-bold">Paryāvaraṇa Vidyā</span>
+          <div className="inline-flex items-center gap-2 mb-4 drop-shadow-lg">
+            <Leaf className="h-10 w-10 text-green-300" />
+            <span className="font-display text-3xl font-bold text-white">Paryāvaraṇa Vidyā</span>
           </div>
-          <p className="text-muted-foreground">Empowering environmental education through gamification</p>
+          <p className="text-green-100">Empowering environmental education through gamification</p>
         </div>
 
         <Card>
