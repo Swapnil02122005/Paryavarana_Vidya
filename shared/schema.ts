@@ -12,7 +12,7 @@ export const users = pgTable("users", {
   mobile: text("mobile"),
   gender: text("gender"),
   location: text("location"),
-  role: text("role"),
+  role: text("role").notNull().default("student"),
   institution: text("institution"),
   ecoPoints: integer("eco_points").notNull().default(0),
   coins: integer("coins").notNull().default(0),
@@ -20,6 +20,15 @@ export const users = pgTable("users", {
   achievements: jsonb("achievements").$type<Achievement[]>().notNull().default(sql`'[]'::jsonb`),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
+
+export const teacherStudents = pgTable("teacher_students", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  teacherId: varchar("teacher_id").notNull().references(() => users.id),
+  studentId: varchar("student_id").notNull().references(() => users.id),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+}, (table) => ({
+  uniqueTeacherStudent: sql`UNIQUE (${table.teacherId}, ${table.studentId})`,
+}));
 
 export interface Achievement {
   id: string;
@@ -37,9 +46,27 @@ export const insertUserSchema = createInsertSchema(users).pick({
   mobile: true,
   gender: true,
   location: true,
-  role: true,
   institution: true,
+}).extend({
+  role: z.enum(["student", "teacher"]).optional(),
 });
+
+export const loginSchema = z.object({
+  username: z.string().min(3),
+  password: z.string().min(6),
+});
+
+export const updateUserSchema = createInsertSchema(users).pick({
+  name: true,
+  email: true,
+  mobile: true,
+  gender: true,
+  location: true,
+  institution: true,
+}).partial();
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
+export type LoginData = z.infer<typeof loginSchema>;
+export type UpdateUser = z.infer<typeof updateUserSchema>;
+export type TeacherStudent = typeof teacherStudents.$inferSelect;

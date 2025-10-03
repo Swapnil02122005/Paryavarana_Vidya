@@ -1,10 +1,36 @@
 import express, { type Request, Response, NextFunction } from "express";
+import session from "express-session";
+import ConnectPgSimple from "connect-pg-simple";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+if (!process.env.DATABASE_URL) {
+  throw new Error("DATABASE_URL environment variable is required");
+}
+
+const PgSession = ConnectPgSimple(session);
+
+app.use(
+  session({
+    store: new PgSession({
+      conString: process.env.DATABASE_URL,
+      createTableIfMissing: true,
+    }),
+    secret: process.env.SESSION_SECRET || "paryavarana-vidya-secret-key-change-in-production",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      sameSite: "lax",
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    },
+  })
+);
 
 app.use((req, res, next) => {
   const start = Date.now();
