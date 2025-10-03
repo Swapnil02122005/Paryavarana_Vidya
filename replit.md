@@ -4,6 +4,24 @@
 
 Paryāvaraṇa Vidyā is a gamified environmental education platform designed for Indian schools and colleges. The platform transforms environmental learning through interactive lessons, real-world challenges, quizzes, and eco-friendly tasks. Students earn eco-points, unlock achievements, compete in leaderboards, and track their progress while learning about critical environmental issues like air pollution, water scarcity, plastic waste, and climate change. The platform promotes sustainable practices through engaging game mechanics including badges, levels, streaks, and school-level competitions.
 
+## Replit Environment Setup (October 2025)
+
+### GitHub Import Configuration
+This project was successfully imported from GitHub and configured for the Replit environment:
+- **Node.js**: v20.x configured and working
+- **Dependencies**: All npm packages installed successfully
+- **Workflow**: Configured to run `npm run dev` on port 5000 with webview output
+- **Vite Configuration**: Already includes `allowedHosts: true` for Replit proxy compatibility
+- **Asset Management**: Stock images mapped from generated_images to stock_images directory
+- **TypeScript**: Storage interface fixed to properly initialize User objects with all required fields
+- **Deployment**: Configured for autoscale deployment with build and start scripts
+
+### Running the Application
+- **Development**: `npm run dev` - Starts Express server with Vite HMR on port 5000
+- **Production Build**: `npm run build` - Builds frontend with Vite and backend with esbuild
+- **Production Server**: `npm run start` - Runs production server from dist/index.js
+- **Type Checking**: `npm run check` - Runs TypeScript compiler in check mode
+
 ## Recent Changes (October 2025)
 
 ### Profile System Implementation
