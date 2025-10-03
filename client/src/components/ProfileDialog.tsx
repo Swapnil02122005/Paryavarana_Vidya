@@ -179,11 +179,11 @@ export function ProfileDialog({ open, onOpenChange }: ProfileDialogProps) {
             
             <Card>
               <CardContent className="pt-6">
-                <div className="grid grid-cols-13 gap-1">
+                <div className="flex flex-wrap gap-1 max-w-full">
                   {activeDaysCalendar.map((day, index) => (
                     <div
                       key={index}
-                      className={`h-3 w-3 rounded-sm ${
+                      className={`h-3 w-3 rounded-sm flex-shrink-0 ${
                         day.isActive
                           ? 'bg-green-500 dark:bg-green-600'
                           : 'bg-muted'
