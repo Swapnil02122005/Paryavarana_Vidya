@@ -22,6 +22,7 @@ import Redeem from "@/pages/Redeem";
 import Profile from "@/pages/Profile";
 import TeacherDashboard from "@/pages/TeacherDashboard";
 import TeacherStudents from "@/pages/TeacherStudents";
+import Admin from "@/pages/Admin";
 import WasteSortingGame from "@/pages/WasteSortingGame";
 import CarbonFootprintGame from "@/pages/CarbonFootprintGame";
 import WaterConservationGame from "@/pages/WaterConservationGame";
@@ -168,6 +169,13 @@ function Router() {
               <Header />
               <Redeem />
             </div>
+          </ProtectedRoute>
+        )}
+      </Route>
+      <Route path="/admin">
+        {() => (
+          <ProtectedRoute>
+            <Admin />
           </ProtectedRoute>
         )}
       </Route>
