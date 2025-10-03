@@ -46,16 +46,28 @@ export default function Welcome() {
             interactive, and rewarding. Earn points, unlock achievements, and make a real difference!
           </p>
           
-          <Link href="/login">
-            <Button 
-              size="lg" 
-              className="text-xl px-12 py-7 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-2xl shadow-green-500/30 transform hover:scale-105 transition-all duration-300 group"
-              data-testid="button-get-started"
-            >
-              Get Started
-              <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </Link>
+          <div className="flex gap-4 justify-center items-center flex-wrap">
+            <Link href="/register">
+              <Button 
+                size="lg" 
+                className="text-xl px-12 py-7 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-2xl shadow-green-500/30 transform hover:scale-105 transition-all duration-300 group"
+                data-testid="button-get-started"
+              >
+                Get Started
+                <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
+            <Link href="/launch">
+              <Button 
+                size="lg" 
+                variant="outline"
+                className="text-xl px-12 py-7 rounded-full border-2 border-green-500 text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-950 shadow-xl transform hover:scale-105 transition-all duration-300"
+                data-testid="button-learn-more"
+              >
+                Learn More
+              </Button>
+            </Link>
+          </div>
           
           <p className="mt-6 text-sm text-gray-500 dark:text-gray-500">
             ✨ Free to join • No credit card required
