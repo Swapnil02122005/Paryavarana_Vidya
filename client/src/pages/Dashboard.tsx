@@ -35,42 +35,6 @@ export default function Dashboard() {
         </section>
 
         <section>
-          <h2 className="font-display text-2xl font-semibold mb-4">Quick Actions</h2>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            <Link href="/current-issues">
-              <Button variant="outline" className="w-full h-auto py-4 flex flex-col gap-2">
-                <span className="text-lg">🌍</span>
-                <span className="font-semibold">Current Issues</span>
-              </Button>
-            </Link>
-            <Link href="/solutions">
-              <Button variant="outline" className="w-full h-auto py-4 flex flex-col gap-2">
-                <span className="text-lg">💡</span>
-                <span className="font-semibold">Solutions</span>
-              </Button>
-            </Link>
-            <Link href="/games">
-              <Button variant="outline" className="w-full h-auto py-4 flex flex-col gap-2">
-                <span className="text-lg">🎮</span>
-                <span className="font-semibold">Play Games</span>
-              </Button>
-            </Link>
-            <Link href="/quiz">
-              <Button variant="outline" className="w-full h-auto py-4 flex flex-col gap-2">
-                <span className="text-lg">📝</span>
-                <span className="font-semibold">Take Quiz</span>
-              </Button>
-            </Link>
-            <Link href="/ai-chat">
-              <Button variant="outline" className="w-full h-auto py-4 flex flex-col gap-2">
-                <span className="text-lg">🤖</span>
-                <span className="font-semibold">AI Assistant</span>
-              </Button>
-            </Link>
-          </div>
-        </section>
-
-        <section>
           <h2 className="font-display text-2xl font-semibold mb-4">Your Progress</h2>
           <StatsOverview />
         </section>

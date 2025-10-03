@@ -179,6 +179,183 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/challenges", requireAuth, async (req, res) => {
+    try {
+      const challenges = await storage.getChallenges();
+      res.json(challenges);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.get("/api/challenges/completions", requireAuth, async (req, res) => {
+    try {
+      const authReq = req as AuthRequest;
+      const completions = await storage.getChallengeCompletions(authReq.user!.id);
+      res.json(completions);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/challenges/complete", requireAuth, async (req, res) => {
+    try {
+      const authReq = req as AuthRequest;
+      const { challengeId } = req.body;
+      const completion = await storage.completeChallenge(authReq.user!.id, challengeId);
+      res.json(completion);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.get("/api/quizzes", requireAuth, async (req, res) => {
+    try {
+      const quizzes = await storage.getQuizzes();
+      res.json(quizzes);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.get("/api/quizzes/completions", requireAuth, async (req, res) => {
+    try {
+      const authReq = req as AuthRequest;
+      const completions = await storage.getQuizCompletions(authReq.user!.id);
+      res.json(completions);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/quizzes/complete", requireAuth, async (req, res) => {
+    try {
+      const authReq = req as AuthRequest;
+      const { quizId, score, totalQuestions } = req.body;
+      const completion = await storage.completeQuiz(authReq.user!.id, quizId, score, totalQuestions);
+      res.json(completion);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.get("/api/games", requireAuth, async (req, res) => {
+    try {
+      const games = await storage.getGames();
+      res.json(games);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/games/complete", requireAuth, async (req, res) => {
+    try {
+      const authReq = req as AuthRequest;
+      const { gameId, score } = req.body;
+      const completion = await storage.completeGame(authReq.user!.id, gameId, score);
+      res.json(completion);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.get("/api/eco-clubs", requireAuth, async (req, res) => {
+    try {
+      const clubs = await storage.getEcoClubs();
+      res.json(clubs);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.get("/api/eco-clubs/my-clubs", requireAuth, async (req, res) => {
+    try {
+      const authReq = req as AuthRequest;
+      const clubs = await storage.getUserClubs(authReq.user!.id);
+      res.json(clubs);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/eco-clubs/join", requireAuth, async (req, res) => {
+    try {
+      const authReq = req as AuthRequest;
+      const { clubId } = req.body;
+      const member = await storage.joinClub(authReq.user!.id, clubId);
+      res.json(member);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/eco-clubs/leave", requireAuth, async (req, res) => {
+    try {
+      const authReq = req as AuthRequest;
+      const { clubId } = req.body;
+      await storage.leaveClub(authReq.user!.id, clubId);
+      res.json({ message: "Left club successfully" });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.get("/api/issues", requireAuth, async (req, res) => {
+    try {
+      const issues = await storage.getIssues();
+      res.json(issues);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.get("/api/solutions", requireAuth, async (req, res) => {
+    try {
+      const { issueId } = req.query;
+      const solutions = await storage.getSolutions(issueId as string | undefined);
+      res.json(solutions);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  const requireAdmin = async (req: Request, res: Response, next: NextFunction) => {
+    const authReq = req as AuthRequest;
+    if (!authReq.user || authReq.user.role !== "admin") {
+      return res.status(403).json({ message: "Admin access required" });
+    }
+    next();
+  };
+
+  app.post("/api/admin/authenticate", requireAuth, requireAdmin, async (req, res) => {
+    try {
+      const { table, id, authenticated } = req.body;
+      await storage.authenticateItem(table, id, authenticated);
+      res.json({ message: "Item authentication updated" });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/teacher/games", requireAuth, requireTeacher, async (req, res) => {
+    try {
+      const authReq = req as AuthRequest;
+      const game = await storage.createGame({ ...req.body, createdById: authReq.user!.id });
+      res.status(201).json(game);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/teacher/challenges", requireAuth, requireTeacher, async (req, res) => {
+    try {
+      const challenge = await storage.createChallenge(req.body);
+      res.status(201).json(challenge);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
   const httpServer = createServer(app);
 
   return httpServer;

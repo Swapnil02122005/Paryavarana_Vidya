@@ -17,6 +17,7 @@ import Quiz from "@/pages/Quiz";
 import EcoClubs from "@/pages/EcoClubs";
 import AIChat from "@/pages/AIChat";
 import Games from "@/pages/Games";
+import Challenges from "@/pages/Challenges";
 import Redeem from "@/pages/Redeem";
 import Profile from "@/pages/Profile";
 import TeacherDashboard from "@/pages/TeacherDashboard";
@@ -114,6 +115,13 @@ function Router() {
                 <Quiz />
               </main>
             </div>
+          </ProtectedRoute>
+        )}
+      </Route>
+      <Route path="/challenges">
+        {() => (
+          <ProtectedRoute>
+            <Challenges />
           </ProtectedRoute>
         )}
       </Route>
