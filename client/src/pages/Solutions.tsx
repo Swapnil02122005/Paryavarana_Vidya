@@ -5,6 +5,8 @@ import { Lightbulb, Play } from "lucide-react";
 import treePlantingImage from "@assets/stock_images/tree_planting_hands__ffbd7be4.jpg";
 import solarEnergyImage from "@assets/stock_images/solar_energy_panels__c1f1b8c7.jpg";
 import waterConservationImage from "@assets/stock_images/water_conservation_c_fe482b3a.jpg";
+import wasteSortingImage from "@assets/stock_images/waste_segregation_so_871ae14e.jpg";
+import biodiversityImage from "@assets/stock_images/indian_forest_biodiv_e9bbd8eb.jpg";
 
 export default function Solutions() {
   const solutions = [
@@ -52,6 +54,111 @@ export default function Solutions() {
       ],
       impact: "Saves precious water resources and reduces water bills",
       videoAvailable: true
+    },
+    {
+      id: 4,
+      title: "Reduce, Reuse, Recycle - Waste Management",
+      category: "Waste",
+      image: wasteSortingImage,
+      difficulty: "Easy",
+      methods: [
+        "Segregate waste at source into wet, dry, and hazardous",
+        "Compost organic waste at home",
+        "Use reusable bags, bottles, and containers",
+        "Donate or sell items instead of throwing them away"
+      ],
+      impact: "Reduces landfill waste by 70% and conserves natural resources",
+      videoAvailable: true
+    },
+    {
+      id: 5,
+      title: "Sustainable Transportation",
+      category: "Air Quality",
+      image: solarEnergyImage,
+      difficulty: "Easy",
+      methods: [
+        "Use public transport, carpool, or bike to work/school",
+        "Walk for short distances instead of using vehicles",
+        "Support electric vehicle adoption",
+        "Maintain vehicles properly to reduce emissions"
+      ],
+      impact: "Cuts carbon emissions by 40% and improves urban air quality",
+      videoAvailable: false
+    },
+    {
+      id: 6,
+      title: "Organic & Sustainable Farming",
+      category: "Agriculture",
+      image: biodiversityImage,
+      difficulty: "Medium",
+      methods: [
+        "Use organic fertilizers and natural pest control",
+        "Practice crop rotation and intercropping",
+        "Adopt water-efficient irrigation techniques",
+        "Support local organic farmers and markets"
+      ],
+      impact: "Improves soil health, reduces chemical pollution, and produces healthier food",
+      videoAvailable: true
+    },
+    {
+      id: 7,
+      title: "Protect & Restore Ecosystems",
+      category: "Biodiversity",
+      image: biodiversityImage,
+      difficulty: "Hard",
+      methods: [
+        "Participate in wetland and forest restoration projects",
+        "Create wildlife corridors and green belts",
+        "Support conservation organizations",
+        "Avoid products made from endangered species"
+      ],
+      impact: "Preserves biodiversity and maintains ecological balance",
+      videoAvailable: true
+    },
+    {
+      id: 8,
+      title: "Reduce Plastic Usage",
+      category: "Waste",
+      image: wasteSortingImage,
+      difficulty: "Easy",
+      methods: [
+        "Carry reusable shopping bags and bottles",
+        "Say no to single-use plastics like straws and cutlery",
+        "Choose products with minimal or biodegradable packaging",
+        "Participate in beach and river cleanup drives"
+      ],
+      impact: "Reduces ocean plastic pollution and protects marine life",
+      videoAvailable: false
+    },
+    {
+      id: 9,
+      title: "Green Building & Energy Efficiency",
+      category: "Energy",
+      image: solarEnergyImage,
+      difficulty: "Hard",
+      methods: [
+        "Use LED bulbs and energy-efficient appliances",
+        "Improve insulation to reduce heating/cooling needs",
+        "Install rainwater harvesting and greywater systems",
+        "Design buildings with natural light and ventilation"
+      ],
+      impact: "Reduces energy consumption by 50% and lowers carbon footprint",
+      videoAvailable: true
+    },
+    {
+      id: 10,
+      title: "Community Awareness & Education",
+      category: "Education",
+      image: treePlantingImage,
+      difficulty: "Easy",
+      methods: [
+        "Organize environmental awareness campaigns",
+        "Conduct workshops on sustainable living",
+        "Share information through social media",
+        "Involve children in eco-friendly activities"
+      ],
+      impact: "Creates a culture of environmental responsibility and collective action",
+      videoAvailable: false
     }
   ];
 

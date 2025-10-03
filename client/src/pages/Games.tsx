@@ -80,6 +80,71 @@ export default function Games() {
       status: "Play Now",
       image: biodiversityImage,
       minPoints: 2500
+    },
+    {
+      id: 10,
+      title: "Air Quality Monitor",
+      description: "Track pollutants and suggest improvements to reduce air pollution in your city",
+      type: "Individual",
+      difficulty: "Easy",
+      points: 110,
+      duration: "6 min",
+      players: "1",
+      status: "Play Now",
+      image: wasteSortingImage,
+      minPoints: 0
+    },
+    {
+      id: 11,
+      title: "Ecosystem Balance",
+      description: "Maintain biodiversity by balancing predator-prey relationships in a virtual ecosystem",
+      type: "Individual",
+      difficulty: "Hard",
+      points: 220,
+      duration: "12 min",
+      players: "1",
+      status: "Play Now",
+      image: biodiversityImage,
+      minPoints: 5000
+    },
+    {
+      id: 12,
+      title: "Plastic-Free Life",
+      description: "Navigate daily life making choices to eliminate single-use plastics",
+      type: "Individual",
+      difficulty: "Easy",
+      points: 90,
+      duration: "5 min",
+      players: "1",
+      status: "Play Now",
+      image: waterConservationImage,
+      minPoints: 0
+    },
+    {
+      id: 13,
+      title: "Tree Planter Hero",
+      description: "Plant and nurture trees in different terrains while managing resources",
+      type: "Individual",
+      difficulty: "Medium",
+      points: 140,
+      duration: "9 min",
+      players: "1",
+      status: "Play Now",
+      image: treePlantingImage,
+      minPoints: 2500
+    },
+    {
+      id: 14,
+      title: "Sustainable City Builder",
+      description: "Design an eco-friendly city with green infrastructure and renewable energy",
+      type: "Individual",
+      difficulty: "Hard",
+      points: 280,
+      duration: "18 min",
+      players: "1",
+      status: "Play Now",
+      image: solarEnergyImage,
+      minPoints: 5000
     }
   ];
 
@@ -135,6 +200,58 @@ export default function Games() {
       status: "Play Now",
       image: biodiversityImage,
       minPoints: 5000
+    },
+    {
+      id: 15,
+      title: "Forest Fire Brigade",
+      description: "Team up to prevent and control forest fires by strategically placing resources",
+      type: "Group",
+      difficulty: "Medium",
+      points: 220,
+      duration: "18 min",
+      players: "3-5",
+      status: "Find Team",
+      image: biodiversityImage,
+      minPoints: 2500
+    },
+    {
+      id: 16,
+      title: "Ocean Rescue Mission",
+      description: "Collaborate to clean ocean debris and rescue marine animals",
+      type: "Group",
+      difficulty: "Medium",
+      points: 240,
+      duration: "20 min",
+      players: "2-6",
+      status: "Find Team",
+      image: waterConservationImage,
+      minPoints: 2500
+    },
+    {
+      id: 17,
+      title: "Wildlife Conservation Quest",
+      description: "Work together to protect endangered species and restore habitats",
+      type: "Group",
+      difficulty: "Hard",
+      points: 320,
+      duration: "22 min",
+      players: "4-6",
+      status: "Find Team",
+      image: biodiversityImage,
+      minPoints: 5000
+    },
+    {
+      id: 18,
+      title: "Green School Challenge",
+      description: "Compete with other schools to implement the most eco-friendly initiatives",
+      type: "Group",
+      difficulty: "Easy",
+      points: 180,
+      duration: "12 min",
+      players: "5-10",
+      status: "Find Team",
+      image: treePlantingImage,
+      minPoints: 0
     }
   ];
 
