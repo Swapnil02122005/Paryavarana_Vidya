@@ -62,3 +62,58 @@ The platform is designed for username/password-based authentication with registr
 
 **Asset Management:**
 - Static images in `/attached_assets/`
+
+## Recent Changes
+
+### October 3, 2025 - Project Import Setup
+- Successfully imported GitHub repository to Replit environment
+- Created PostgreSQL database using Replit's built-in database service
+- Ran database migrations using `npm run db:push` to create user tables
+- Configured workflow with webview output type on port 5000
+- Verified Vite dev server properly configured with `allowedHosts: true` for Replit proxy
+- Set up deployment configuration for autoscale deployment target
+- Application running successfully on port 5000 with frontend and backend on same port
+
+## Development Setup
+
+### Prerequisites
+- Node.js 20
+- PostgreSQL database (automatically provisioned in Replit)
+
+### Environment Variables
+The following environment variables are automatically set by Replit:
+- `DATABASE_URL` - PostgreSQL connection string
+- `PGHOST`, `PGPORT`, `PGUSER`, `PGPASSWORD`, `PGDATABASE` - Individual database connection parameters
+- `PORT` - Server port (defaults to 5000)
+
+### Running the Application
+
+**Development mode:**
+```bash
+npm run dev
+```
+This starts the Express server with Vite HMR on port 5000.
+
+**Build for production:**
+```bash
+npm run build
+```
+This builds both the frontend (Vite) and backend (esbuild) into the `dist/` directory.
+
+**Production mode:**
+```bash
+npm run start
+```
+This runs the built application from the `dist/` directory.
+
+**Database migrations:**
+```bash
+npm run db:push
+```
+This syncs the Drizzle schema to the database.
+
+### Project Structure
+- `/client` - React frontend application
+- `/server` - Express backend API
+- `/shared` - Shared TypeScript types and schemas
+- `/attached_assets` - Static assets and images
