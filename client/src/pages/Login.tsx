@@ -17,7 +17,7 @@ import { z } from "zod";
 const registerSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters"),
   password: z.string().min(6, "Password must be at least 6 characters"),
-  name: z.string().min(2, "Name is required"),
+  name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address").optional().or(z.literal("")),
   mobile: z.string().min(10, "Mobile number must be 10 digits").optional().or(z.literal("")),
   gender: z.string().optional(),

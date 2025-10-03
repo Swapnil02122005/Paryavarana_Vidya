@@ -14,7 +14,7 @@ import { User as UserIcon, Award, Coins, Calendar, Edit2 } from "lucide-react";
 import { useState } from "react";
 
 const updateProfileSchema = z.object({
-  name: z.string().min(2, "Name is required").optional(),
+  name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address").optional().or(z.literal("")),
   mobile: z.string().min(10, "Mobile number must be 10 digits").optional().or(z.literal("")),
   gender: z.string().optional(),
