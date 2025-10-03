@@ -14,6 +14,12 @@ import EcoClubs from "@/pages/EcoClubs";
 import AIChat from "@/pages/AIChat";
 import Games from "@/pages/Games";
 import WasteSortingGame from "@/pages/WasteSortingGame";
+import CarbonFootprintGame from "@/pages/CarbonFootprintGame";
+import WaterConservationGame from "@/pages/WaterConservationGame";
+import RenewableEnergyGame from "@/pages/RenewableEnergyGame";
+import EcoWarriorsGame from "@/pages/EcoWarriorsGame";
+import CleanupRaceGame from "@/pages/CleanupRaceGame";
+import ClimateCrisisGame from "@/pages/ClimateCrisisGame";
 import NotFound from "@/pages/not-found";
 import { Header } from "@/components/Header";
 
@@ -89,6 +95,66 @@ function Router() {
             <Header />
             <main className="max-w-7xl mx-auto px-4 py-8">
               <WasteSortingGame />
+            </main>
+          </div>
+        )}
+      </Route>
+      <Route path="/game/2">
+        {() => (
+          <div className="min-h-screen bg-background">
+            <Header />
+            <main className="max-w-7xl mx-auto px-4 py-8">
+              <CarbonFootprintGame />
+            </main>
+          </div>
+        )}
+      </Route>
+      <Route path="/game/3">
+        {() => (
+          <div className="min-h-screen bg-background">
+            <Header />
+            <main className="max-w-7xl mx-auto px-4 py-8">
+              <WaterConservationGame />
+            </main>
+          </div>
+        )}
+      </Route>
+      <Route path="/game/4">
+        {() => (
+          <div className="min-h-screen bg-background">
+            <Header />
+            <main className="max-w-7xl mx-auto px-4 py-8">
+              <RenewableEnergyGame />
+            </main>
+          </div>
+        )}
+      </Route>
+      <Route path="/game/5">
+        {() => (
+          <div className="min-h-screen bg-background">
+            <Header />
+            <main className="max-w-7xl mx-auto px-4 py-8">
+              <EcoWarriorsGame />
+            </main>
+          </div>
+        )}
+      </Route>
+      <Route path="/game/6">
+        {() => (
+          <div className="min-h-screen bg-background">
+            <Header />
+            <main className="max-w-7xl mx-auto px-4 py-8">
+              <CleanupRaceGame />
+            </main>
+          </div>
+        )}
+      </Route>
+      <Route path="/game/7">
+        {() => (
+          <div className="min-h-screen bg-background">
+            <Header />
+            <main className="max-w-7xl mx-auto px-4 py-8">
+              <ClimateCrisisGame />
             </main>
           </div>
         )}
