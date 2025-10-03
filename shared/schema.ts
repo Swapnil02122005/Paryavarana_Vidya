@@ -15,6 +15,7 @@ export const users = pgTable("users", {
   role: text("role"),
   institution: text("institution"),
   ecoPoints: integer("eco_points").notNull().default(0),
+  coins: integer("coins").notNull().default(0),
   activeDays: jsonb("active_days").$type<string[]>().notNull().default(sql`'[]'::jsonb`),
   achievements: jsonb("achievements").$type<Achievement[]>().notNull().default(sql`'[]'::jsonb`),
   createdAt: timestamp("created_at").notNull().defaultNow(),

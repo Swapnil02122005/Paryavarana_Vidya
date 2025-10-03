@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
+import Launch from "@/pages/Launch";
 import Dashboard from "@/pages/Dashboard";
 import CurrentIssues from "@/pages/CurrentIssues";
 import Solutions from "@/pages/Solutions";
@@ -13,6 +14,7 @@ import Quiz from "@/pages/Quiz";
 import EcoClubs from "@/pages/EcoClubs";
 import AIChat from "@/pages/AIChat";
 import Games from "@/pages/Games";
+import Redeem from "@/pages/Redeem";
 import WasteSortingGame from "@/pages/WasteSortingGame";
 import CarbonFootprintGame from "@/pages/CarbonFootprintGame";
 import WaterConservationGame from "@/pages/WaterConservationGame";
@@ -20,6 +22,8 @@ import RenewableEnergyGame from "@/pages/RenewableEnergyGame";
 import EcoWarriorsGame from "@/pages/EcoWarriorsGame";
 import CleanupRaceGame from "@/pages/CleanupRaceGame";
 import ClimateCrisisGame from "@/pages/ClimateCrisisGame";
+import DisasterDashGame from "@/pages/DisasterDashGame";
+import GreenHeroChallengeGame from "@/pages/GreenHeroChallengeGame";
 import NotFound from "@/pages/not-found";
 import { Header } from "@/components/Header";
 
@@ -27,6 +31,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Login} />
+      <Route path="/launch" component={Launch} />
       <Route path="/home" component={Home} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/current-issues">
@@ -86,6 +91,14 @@ function Router() {
             <main className="max-w-7xl mx-auto px-4 py-8">
               <Games />
             </main>
+          </div>
+        )}
+      </Route>
+      <Route path="/redeem">
+        {() => (
+          <div className="min-h-screen bg-background">
+            <Header />
+            <Redeem />
           </div>
         )}
       </Route>
@@ -155,6 +168,26 @@ function Router() {
             <Header />
             <main className="max-w-7xl mx-auto px-4 py-8">
               <ClimateCrisisGame />
+            </main>
+          </div>
+        )}
+      </Route>
+      <Route path="/game/8">
+        {() => (
+          <div className="min-h-screen bg-background">
+            <Header />
+            <main className="max-w-7xl mx-auto px-4 py-8">
+              <DisasterDashGame />
+            </main>
+          </div>
+        )}
+      </Route>
+      <Route path="/game/9">
+        {() => (
+          <div className="min-h-screen bg-background">
+            <Header />
+            <main className="max-w-7xl mx-auto px-4 py-8">
+              <GreenHeroChallengeGame />
             </main>
           </div>
         )}

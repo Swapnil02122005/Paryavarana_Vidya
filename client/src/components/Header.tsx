@@ -29,6 +29,9 @@ export function Header() {
             <a href="/games" className="text-sm font-medium hover:text-primary transition-colors">
               Games
             </a>
+            <a href="/redeem" className="text-sm font-medium hover:text-primary transition-colors">
+              Redeem
+            </a>
             <a href="/eco-clubs" className="text-sm font-medium hover:text-primary transition-colors">
               Eco-Clubs
             </a>

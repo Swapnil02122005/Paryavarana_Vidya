@@ -39,6 +39,7 @@ export class MemStorage implements IStorage {
       role: insertUser.role ?? null,
       institution: insertUser.institution ?? null,
       ecoPoints: 0,
+      coins: 0,
       activeDays: [],
       achievements: [],
       createdAt: new Date(),

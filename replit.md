@@ -4,6 +4,133 @@
 
 Paryāvaraṇa Vidyā is a gamified environmental education platform designed for Indian schools and colleges. The platform transforms environmental learning through interactive lessons, real-world challenges, quizzes, and eco-friendly tasks. Students earn eco-points, unlock achievements, compete in leaderboards, and track their progress while learning about critical environmental issues like air pollution, water scarcity, plastic waste, and climate change. The platform promotes sustainable practices through engaging game mechanics including badges, levels, streaks, and school-level competitions.
 
+## Latest Features Added (October 2025)
+
+### New Features Implemented
+
+#### 1. Redeem Page with Coin System
+- **Location**: `/redeem` route, `client/src/pages/Redeem.tsx`
+- **Features**:
+  - Coin conversion system (100 eco-points = 1 coin)
+  - Rewards catalog with 8 eco-friendly rewards
+  - User balance display (points, coins, rewards claimed)
+  - Redemption history tracking
+  - Stock availability for each reward
+  - Category badges (Physical, Impact, Digital)
+- **Status**: UI complete, needs backend integration for actual coin deduction and reward tracking
+
+#### 2. New Interactive Games
+- **Disaster Dash** (`/game/8`): Prepare a city for disaster by placing shelters and managing resources within 2 minutes
+- **Green Hero Challenge** (`/game/9`): Save a disaster-struck city through environmental actions within 3 minutes
+- **Features**: Timer-based gameplay, resource management, scoring system, difficulty progression
+- **Status**: Complete game mechanics and UI implemented
+
+#### 3. Game Filtering System
+- **Location**: `client/src/pages/Games.tsx`
+- **Features**:
+  - Point-based game locking (Easy: 0+, Medium: 2500+, Hard: 5000+)
+  - Difficulty filter dropdown (All, Easy, Medium, Hard)
+  - Visual lock indicators on game cards
+  - Required points displayed for locked games
+- **Status**: UI complete, needs connection to real user points from backend
+
+#### 4. Game Card Images
+- **Features**: Attractive environmental images on all game cards with lock overlays for inaccessible games
+- **Images Used**: Waste sorting, tree planting, solar energy, water conservation, biodiversity
+- **Status**: Complete
+
+#### 5. Launch Page
+- **Location**: `/launch` route, `client/src/pages/Launch.tsx`
+- **Features**:
+  - Hero section with application branding
+  - Impact statistics (50,000+ students, 15M points, 12,000+ trees, 500+ clubs)
+  - Feature showcase (6 key features)
+  - Mission sections for students and teachers
+  - Conversion rate information (100 points = 1 coin)
+  - Call-to-action buttons
+- **Status**: Complete
+
+#### 6. Teacher Role Features
+- **Location**: `client/src/pages/EcoClubs.tsx`
+- **Features**:
+  - Teacher dashboard with management options
+  - Create and manage eco-clubs
+  - Add educational content
+  - Manage students
+  - View analytics
+  - Institution field for club creation
+- **Current State**: UI implemented with `isTeacher` flag (currently set to `true` for demonstration)
+- **TODO**: Implement role-based authentication and connect to backend
+
+#### 7. Database Schema Updates
+- **Location**: `shared/schema.ts`, `server/storage.ts`
+- **Changes**: Added `coins` field to user schema (integer, default 0)
+- **Status**: Schema updated, in-memory storage updated
+
+#### 8. MySQL Connection Guide
+- **Location**: `MySQL_DATABASE_SETUP_GUIDE.md`
+- **Content**: Comprehensive guide for connecting MySQL database with:
+  - Installation steps
+  - Configuration examples for mysql2 and PlanetScale
+  - Schema migration instructions
+  - Environment variable setup
+  - Testing procedures
+  - Additional table examples
+  - Troubleshooting tips
+  - Cloud provider configurations (AWS RDS, Google Cloud SQL, Azure)
+- **Status**: Complete
+
+### Integration TODOs
+
+To make the features fully functional, the following integrations are needed:
+
+1. **User Authentication & State Management**:
+   - Implement user login/registration with role detection (student/teacher)
+   - Store user session and retrieve user data (points, coins, role)
+   - Pass user data to components through context or props
+
+2. **Backend API Routes** (in `server/routes.ts`):
+   ```typescript
+   // User endpoints
+   GET /api/user/:id - Get user data
+   PUT /api/user/:id/points - Update user points
+   PUT /api/user/:id/coins - Update user coins
+   
+   // Redeem endpoints
+   POST /api/redeem - Redeem a reward (deduct coins)
+   GET /api/redeem/history - Get redemption history
+   
+   // Games endpoints
+   POST /api/games/:id/complete - Record game completion
+   
+   // Eco-Clubs endpoints (teacher only)
+   POST /api/clubs - Create new club
+   PUT /api/clubs/:id - Update club
+   DELETE /api/clubs/:id - Delete club
+   POST /api/clubs/:id/content - Add content
+   GET /api/clubs/:id/members - Get club members
+   ```
+
+3. **Replace Hardcoded Values**:
+   - Replace `userPoints = 2450` with actual user data from backend
+   - Replace `isTeacher = true` with role check from user session
+   - Connect coin deduction in Redeem page to backend
+   - Connect game unlock logic to real user points
+
+4. **Database Migration** (if using database instead of in-memory):
+   - Run `npm run db:push` to sync schema to database
+   - Migrate from `MemStorage` to `DatabaseStorage` in `server/storage.ts`
+
+### Quick Start for Teachers
+
+To see teacher features immediately, the `isTeacher` flag in `client/src/pages/EcoClubs.tsx` is currently set to `true`.
+
+To make this dynamic:
+1. Implement authentication system
+2. Store user role in session/JWT
+3. Pass role to EcoClubs component
+4. Change line 18 from `useState(true)` to `useState(userRole === 'teacher')`
+
 ## Replit Environment Setup (October 2025)
 
 ### GitHub Import Configuration
