@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import Welcome from "@/pages/Welcome";
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
 import Launch from "@/pages/Launch";
@@ -34,7 +35,8 @@ import { Header } from "@/components/Header";
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={Login} />
+      <Route path="/" component={Welcome} />
+      <Route path="/login" component={Login} />
       <Route path="/launch">
         {() => (
           <ProtectedRoute>
