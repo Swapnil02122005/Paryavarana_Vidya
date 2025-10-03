@@ -15,8 +15,8 @@ import { useState } from "react";
 
 const updateProfileSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Invalid email address").optional().or(z.literal("")),
-  mobile: z.string().min(10, "Mobile number must be 10 digits").optional().or(z.literal("")),
+  email: z.union([z.string().email("Invalid email address"), z.literal("")]).optional(),
+  mobile: z.union([z.string().min(10, "Mobile number must be 10 digits"), z.literal("")]).optional(),
   gender: z.string().optional(),
   location: z.string().optional(),
   institution: z.string().optional(),
