@@ -69,7 +69,7 @@ export function Header() {
               Games
             </a>
           </Link>
-          <Link href="/issues">
+          <Link href="/current-issues">
             <a className="text-sm font-medium hover:text-primary transition-colors cursor-pointer flex items-center gap-1">
               <AlertCircle className="h-4 w-4" />
               Issues
