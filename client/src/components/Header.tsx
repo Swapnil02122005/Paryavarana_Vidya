@@ -54,24 +54,24 @@ export function Header() {
               Dashboard
             </a>
           </Link>
-          <Link href="/current-issues">
+          <Link href="/quiz">
             <a className="text-sm font-medium hover:text-primary transition-colors cursor-pointer">
-              Issues
+              Quizzes
             </a>
           </Link>
-          <Link href="/solutions">
+          <Link href="/challenges">
             <a className="text-sm font-medium hover:text-primary transition-colors cursor-pointer">
-              Solutions
+              Challenges
+            </a>
+          </Link>
+          <Link href="/eco-clubs">
+            <a className="text-sm font-medium hover:text-primary transition-colors cursor-pointer">
+              Eco-Clubs
             </a>
           </Link>
           <Link href="/games">
             <a className="text-sm font-medium hover:text-primary transition-colors cursor-pointer">
               Games
-            </a>
-          </Link>
-          <Link href="/redeem">
-            <a className="text-sm font-medium hover:text-primary transition-colors cursor-pointer">
-              Redeem
             </a>
           </Link>
           {user?.role === "teacher" && (

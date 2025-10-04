@@ -8,15 +8,27 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Users, Plus, MessageCircle, Award, Settings, BookOpen, Edit, Trash2, UserPlus } from "lucide-react";
+import { Users, Plus, MessageCircle, Award, Settings, BookOpen, Edit, Trash2, UserPlus, Target } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import type { EcoClub, User } from "@shared/schema";
 
 export default function EcoClubs() {
-  const [isTeacher] = useState(true);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [clubName, setClubName] = useState("");
   const [clubDescription, setClubDescription] = useState("");
   const { toast } = useToast();
+
+  const { data: user } = useQuery<User>({
+    queryKey: ["/api/auth/me"],
+  });
+
+  const { data: clubs = [], isLoading } = useQuery<EcoClub[]>({
+    queryKey: ["/api/eco-clubs"],
+  });
+
+  const isTeacher = user?.role === "teacher";
 
   const handleCreateClub = () => {
     if (clubName && clubDescription) {
@@ -30,51 +42,16 @@ export default function EcoClubs() {
     }
   };
 
-  const myClubs = [
-    {
-      id: 1,
-      name: "Tree Planters United",
-      members: 45,
-      badges: ["Tree Planter", "Green Leader"],
-      description: "Focused on increasing green cover in urban areas",
-      unreadMessages: 5
-    },
-    {
-      id: 2,
-      name: "Water Warriors",
-      members: 32,
-      badges: ["Water Saver"],
-      description: "Working on water conservation projects",
-      unreadMessages: 2
-    }
-  ];
-
-  const availableClubs = [
-    {
-      id: 3,
-      name: "Solar Champions",
-      members: 28,
-      requiredBadges: ["Solar Champion"],
-      description: "Promoting renewable energy adoption",
-      canJoin: false
-    },
-    {
-      id: 4,
-      name: "Waste Reduction Squad",
-      members: 56,
-      requiredBadges: ["Recycle Master"],
-      description: "Zero waste initiatives and plastic reduction",
-      canJoin: false
-    },
-    {
-      id: 5,
-      name: "Biodiversity Explorers",
-      members: 23,
-      requiredBadges: ["Eco Warrior"],
-      description: "Documenting and protecting local ecosystems",
-      canJoin: false
-    }
-  ];
+  if (isLoading) {
+    return (
+      <div className="space-y-8">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading eco-clubs...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -189,42 +166,35 @@ export default function EcoClubs() {
 
         <div className="space-y-6">
           <div>
-            <h2 className="text-xl font-semibold mb-4">My Clubs</h2>
+            <h2 className="text-xl font-semibold mb-4">All Eco-Clubs</h2>
             <div className="grid gap-4 md:grid-cols-2">
-              {myClubs.map((club) => (
-                <Card key={club.id} className="hover-elevate" data-testid={`my-club-${club.id}`}>
+              {clubs.map((club) => (
+                <Card key={club.id} className="hover-elevate" data-testid={`club-${club.id}`}>
                   <CardHeader>
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1">
                         <CardTitle className="mb-2">{club.name}</CardTitle>
                         <p className="text-sm text-muted-foreground">{club.description}</p>
                       </div>
-                      {club.unreadMessages > 0 && (
-                        <Badge variant="destructive" className="rounded-full">
-                          {club.unreadMessages}
-                        </Badge>
-                      )}
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <Users className="h-4 w-4" />
-                      <span>{club.members} members</span>
+                      <span>{club.memberCount.toLocaleString()} members</span>
                     </div>
 
                     <div className="flex flex-wrap gap-2">
-                      {club.badges.map((badge, idx) => (
-                        <Badge key={idx} variant="secondary" className="bg-primary/10 text-primary">
-                          <Award className="h-3 w-3 mr-1" />
-                          {badge}
-                        </Badge>
-                      ))}
+                      <Badge variant="secondary" className="bg-primary/10 text-primary">
+                        <Target className="h-3 w-3 mr-1" />
+                        {club.category}
+                      </Badge>
                     </div>
 
                     <div className="flex gap-2">
-                      <Button className="flex-1" data-testid={`button-open-chat-${club.id}`}>
-                        <MessageCircle className="h-4 w-4 mr-2" />
-                        Open Chat
+                      <Button className="flex-1" data-testid={`button-view-${club.id}`}>
+                        <Users className="h-4 w-4 mr-2" />
+                        View Details
                       </Button>
                       {isTeacher && (
                         <Button variant="outline" size="icon" data-testid={`button-manage-${club.id}`}>
@@ -237,42 +207,15 @@ export default function EcoClubs() {
               ))}
             </div>
           </div>
-
-          <div>
-            <h2 className="text-xl font-semibold mb-4">Discover Clubs</h2>
-            <div className="grid gap-4 md:grid-cols-2">
-              {availableClubs.map((club) => (
-                <Card key={club.id} className="hover-elevate opacity-75" data-testid={`club-${club.id}`}>
-                  <CardHeader>
-                    <CardTitle className="mb-2">{club.name}</CardTitle>
-                    <p className="text-sm text-muted-foreground">{club.description}</p>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Users className="h-4 w-4" />
-                      <span>{club.members} members</span>
-                    </div>
-
-                    <div>
-                      <p className="text-xs text-muted-foreground mb-2">Required badges:</p>
-                      <div className="flex flex-wrap gap-2">
-                        {club.requiredBadges.map((badge, idx) => (
-                          <Badge key={idx} variant="outline" className="text-xs">
-                            {badge}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-
-                    <Button className="w-full" variant="secondary" disabled data-testid={`button-join-${club.id}`}>
-                      Earn Badge to Join
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
         </div>
+
+        {clubs.length === 0 && (
+          <Card>
+            <CardContent className="py-12 text-center">
+              <p className="text-muted-foreground">No eco-clubs available yet. Check back soon!</p>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );
