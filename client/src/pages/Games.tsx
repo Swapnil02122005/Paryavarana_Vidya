@@ -9,7 +9,7 @@ import { Link } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import type { GameCompletion } from "@shared/schema";
+import type { GameCompletion, Game } from "@shared/schema";
 import wasteSortingImage from "@assets/stock_images/waste_segregation_so_871ae14e.jpg";
 import solarEnergyImage from "@assets/stock_images/solar_energy_panels__c1f1b8c7.jpg";
 import waterConservationImage from "@assets/stock_images/water_conservation_c_fe482b3a.jpg";
@@ -25,14 +25,18 @@ export default function Games() {
     queryKey: ["/api/games/completions"],
   });
 
-  const isGameCompleted = (gameId: number) => {
-    return gameCompletions.some((completion) => completion.gameId === String(gameId));
+  const { data: gamesFromAPI = [], isLoading: gamesLoading } = useQuery<Game[]>({
+    queryKey: ["/api/games"],
+  });
+
+  const isGameCompleted = (gameId: string) => {
+    return gameCompletions.some((completion) => completion.gameId === gameId);
   };
 
   const markCompleteMutation = useMutation({
-    mutationFn: async (gameId: number) => {
+    mutationFn: async (gameId: string) => {
       return await apiRequest("POST", "/api/games/complete", { 
-        gameId: String(gameId), 
+        gameId, 
         score: 100 
       });
     },
@@ -46,7 +50,7 @@ export default function Games() {
   });
 
   const markIncompleteMutation = useMutation({
-    mutationFn: async (gameId: number) => {
+    mutationFn: async (gameId: string) => {
       return await apiRequest("DELETE", `/api/games/completions/${gameId}`);
     },
     onSuccess: () => {
@@ -58,245 +62,31 @@ export default function Games() {
     },
   });
 
-  const individualGames = [
-    {
-      id: 1,
-      title: "Waste Sorting Challenge",
-      description: "Sort waste items into correct bins before time runs out!",
-      type: "Individual",
-      difficulty: "Easy",
-      points: 100,
-      duration: "5 min",
-      players: "1",
-      status: "Play Now",
-      image: wasteSortingImage,
-      minPoints: 0
-    },
-    {
-      id: 2,
-      title: "Carbon Footprint Quest",
-      description: "Make daily choices and track your carbon impact",
-      type: "Individual",
-      difficulty: "Medium",
-      points: 150,
-      duration: "10 min",
-      players: "1",
-      status: "Play Now",
-      image: solarEnergyImage,
-      minPoints: 2500
-    },
-    {
-      id: 3,
-      title: "Water Conservation Puzzle",
-      description: "Solve puzzles to fix water leaks and save water",
-      type: "Individual",
-      difficulty: "Medium",
-      points: 120,
-      duration: "8 min",
-      players: "1",
-      status: "Play Now",
-      image: waterConservationImage,
-      minPoints: 2500
-    },
-    {
-      id: 4,
-      title: "Renewable Energy Builder",
-      description: "Build a sustainable energy grid for your city",
-      type: "Individual",
-      difficulty: "Hard",
-      points: 200,
-      duration: "15 min",
-      players: "1",
-      status: "Play Now",
-      image: solarEnergyImage,
-      minPoints: 5000
-    },
-    {
-      id: 8,
-      title: "Disaster Dash",
-      description: "Prepare your city for incoming disaster by placing shelters and managing resources",
-      type: "Individual",
-      difficulty: "Medium",
-      points: 250,
-      duration: "2 min",
-      players: "1",
-      status: "Play Now",
-      image: biodiversityImage,
-      minPoints: 2500
-    },
-    {
-      id: 10,
-      title: "Air Quality Monitor",
-      description: "Track pollutants and suggest improvements to reduce air pollution in your city",
-      type: "Individual",
-      difficulty: "Easy",
-      points: 110,
-      duration: "6 min",
-      players: "1",
-      status: "Play Now",
-      image: wasteSortingImage,
-      minPoints: 0
-    },
-    {
-      id: 11,
-      title: "Ecosystem Balance",
-      description: "Maintain biodiversity by balancing predator-prey relationships in a virtual ecosystem",
-      type: "Individual",
-      difficulty: "Hard",
-      points: 220,
-      duration: "12 min",
-      players: "1",
-      status: "Play Now",
-      image: biodiversityImage,
-      minPoints: 5000
-    },
-    {
-      id: 12,
-      title: "Plastic-Free Life",
-      description: "Navigate daily life making choices to eliminate single-use plastics",
-      type: "Individual",
-      difficulty: "Easy",
-      points: 90,
-      duration: "5 min",
-      players: "1",
-      status: "Play Now",
-      image: waterConservationImage,
-      minPoints: 0
-    },
-    {
-      id: 13,
-      title: "Tree Planter Hero",
-      description: "Plant and nurture trees in different terrains while managing resources",
-      type: "Individual",
-      difficulty: "Medium",
-      points: 140,
-      duration: "9 min",
-      players: "1",
-      status: "Play Now",
-      image: treePlantingImage,
-      minPoints: 2500
-    },
-    {
-      id: 14,
-      title: "Sustainable City Builder",
-      description: "Design an eco-friendly city with green infrastructure and renewable energy",
-      type: "Individual",
-      difficulty: "Hard",
-      points: 280,
-      duration: "18 min",
-      players: "1",
-      status: "Play Now",
-      image: solarEnergyImage,
-      minPoints: 5000
-    }
-  ];
+  const getDefaultImage = (category: string) => {
+    const lowerCategory = category.toLowerCase();
+    if (lowerCategory.includes('water')) return waterConservationImage;
+    if (lowerCategory.includes('solar') || lowerCategory.includes('energy')) return solarEnergyImage;
+    if (lowerCategory.includes('tree') || lowerCategory.includes('forest') || lowerCategory.includes('biodiversity')) return biodiversityImage;
+    if (lowerCategory.includes('waste') || lowerCategory.includes('plastic')) return wasteSortingImage;
+    return biodiversityImage;
+  };
 
-  const groupGames = [
-    {
-      id: 5,
-      title: "Eco Warriors Battle",
-      description: "Team up and compete against other teams in environmental trivia",
-      type: "Group",
-      difficulty: "Medium",
-      points: 250,
-      duration: "20 min",
-      players: "2-4 per team",
-      status: "Find Team",
-      image: biodiversityImage,
-      minPoints: 2500
-    },
-    {
-      id: 6,
-      title: "Community Cleanup Race",
-      description: "Coordinate with team to clean virtual community fastest",
-      type: "Group",
-      difficulty: "Easy",
-      points: 200,
-      duration: "15 min",
-      players: "3-6",
-      status: "Find Team",
-      image: wasteSortingImage,
-      minPoints: 0
-    },
-    {
-      id: 7,
-      title: "Climate Crisis Response",
-      description: "Work together to solve environmental emergencies",
-      type: "Group",
-      difficulty: "Hard",
-      points: 300,
-      duration: "25 min",
-      players: "4-8",
-      status: "Find Team",
-      image: treePlantingImage,
-      minPoints: 5000
-    },
-    {
-      id: 9,
-      title: "Green Hero Challenge",
-      description: "Save a disaster-struck city and its people through quick environmental actions",
-      type: "Individual",
-      difficulty: "Hard",
-      points: 300,
-      duration: "3 min",
-      players: "1",
-      status: "Play Now",
-      image: biodiversityImage,
-      minPoints: 5000
-    },
-    {
-      id: 15,
-      title: "Forest Fire Brigade",
-      description: "Team up to prevent and control forest fires by strategically placing resources",
-      type: "Group",
-      difficulty: "Medium",
-      points: 220,
-      duration: "18 min",
-      players: "3-5",
-      status: "Find Team",
-      image: biodiversityImage,
-      minPoints: 2500
-    },
-    {
-      id: 16,
-      title: "Ocean Rescue Mission",
-      description: "Collaborate to clean ocean debris and rescue marine animals",
-      type: "Group",
-      difficulty: "Medium",
-      points: 240,
-      duration: "20 min",
-      players: "2-6",
-      status: "Find Team",
-      image: waterConservationImage,
-      minPoints: 2500
-    },
-    {
-      id: 17,
-      title: "Wildlife Conservation Quest",
-      description: "Work together to protect endangered species and restore habitats",
-      type: "Group",
-      difficulty: "Hard",
-      points: 320,
-      duration: "22 min",
-      players: "4-6",
-      status: "Find Team",
-      image: biodiversityImage,
-      minPoints: 5000
-    },
-    {
-      id: 18,
-      title: "Green School Challenge",
-      description: "Compete with other schools to implement the most eco-friendly initiatives",
-      type: "Group",
-      difficulty: "Easy",
-      points: 180,
-      duration: "12 min",
-      players: "5-10",
-      status: "Find Team",
-      image: treePlantingImage,
-      minPoints: 0
-    }
-  ];
+  const transformedGames = gamesFromAPI.map(game => ({
+    id: game.id,
+    title: game.title,
+    description: game.description || "",
+    type: "Individual",
+    difficulty: game.difficulty || "Medium",
+    points: game.points || 100,
+    duration: "10 min",
+    players: "1",
+    status: "Play Now",
+    image: game.image || getDefaultImage(game.category || ""),
+    minPoints: game.difficulty === "Hard" ? 5000 : game.difficulty === "Medium" ? 2500 : 0
+  }));
+
+  const individualGames = transformedGames;
+  const groupGames: any[] = []; // No group games from API yet
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
@@ -322,6 +112,17 @@ export default function Games() {
 
   const filteredIndividualGames = filterGames(individualGames);
   const filteredGroupGames = filterGames(groupGames);
+
+  if (gamesLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading games...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
