@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Award, CheckCircle2, XCircle, RotateCcw, BookOpen, Target } from "lucide-react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import type { Quiz as QuizType } from "@shared/schema";
+import type { Quiz as QuizType, QuizCompletion } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Quiz() {
@@ -23,6 +23,14 @@ export default function Quiz() {
   const { data: quizzes = [], isLoading } = useQuery<QuizType[]>({
     queryKey: ["/api/quizzes"],
   });
+
+  const { data: quizCompletions = [] } = useQuery<QuizCompletion[]>({
+    queryKey: ["/api/quizzes/completions"],
+  });
+
+  const isQuizCompleted = (quizId: string) => {
+    return quizCompletions.some((completion) => completion.quizId === quizId);
+  };
 
   const completionMutation = useMutation({
     mutationFn: async ({ quizId, score, totalQuestions }: { quizId: string; score: number; totalQuestions: number }) => {
@@ -73,8 +81,15 @@ export default function Quiz() {
           {quizzes.map((quiz) => (
             <Card key={quiz.id} className="hover-elevate" data-testid={`card-quiz-${quiz.id}`}>
               <CardHeader>
-                <CardTitle className="text-xl mb-2">{quiz.title}</CardTitle>
-                <CardDescription>{quiz.description}</CardDescription>
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex-1">
+                    <CardTitle className="text-xl mb-2">{quiz.title}</CardTitle>
+                    <CardDescription>{quiz.description}</CardDescription>
+                  </div>
+                  {isQuizCompleted(quiz.id) && (
+                    <CheckCircle2 className="h-6 w-6 text-green-600 flex-shrink-0" data-testid={`icon-completed-quiz-${quiz.id}`} />
+                  )}
+                </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex flex-wrap gap-2">

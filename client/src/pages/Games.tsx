@@ -3,8 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Gamepad2, Users, Trophy, Clock, Star, AlertTriangle, Shield, Lock } from "lucide-react";
+import { Gamepad2, Users, Trophy, Clock, Star, AlertTriangle, Shield, Lock, CheckCircle2 } from "lucide-react";
 import { Link } from "wouter";
+import { useQuery } from "@tanstack/react-query";
+import type { GameCompletion } from "@shared/schema";
 import wasteSortingImage from "@assets/stock_images/waste_segregation_so_871ae14e.jpg";
 import solarEnergyImage from "@assets/stock_images/solar_energy_panels__c1f1b8c7.jpg";
 import waterConservationImage from "@assets/stock_images/water_conservation_c_fe482b3a.jpg";
@@ -14,6 +16,14 @@ import biodiversityImage from "@assets/stock_images/indian_forest_biodiv_e9bbd8e
 export default function Games() {
   const [difficultyFilter, setDifficultyFilter] = useState<string>("all");
   const userPoints = 2450;
+
+  const { data: gameCompletions = [] } = useQuery<GameCompletion[]>({
+    queryKey: ["/api/games/completions"],
+  });
+
+  const isGameCompleted = (gameId: number) => {
+    return gameCompletions.some((completion) => completion.gameId === String(gameId));
+  };
 
   const individualGames = [
     {
@@ -361,13 +371,18 @@ export default function Games() {
                 </div>
                 <CardHeader>
                   <div className="flex items-start justify-between gap-2">
-                    <div>
+                    <div className="flex-1">
                       <CardTitle className="mb-2">{game.title}</CardTitle>
                       <CardDescription>{game.description}</CardDescription>
                     </div>
-                    <Badge className={getDifficultyColor(game.difficulty)}>
-                      {game.difficulty}
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                      {isGameCompleted(game.id) && (
+                        <CheckCircle2 className="h-6 w-6 text-green-600 flex-shrink-0" data-testid={`icon-completed-game-${game.id}`} />
+                      )}
+                      <Badge className={getDifficultyColor(game.difficulty)}>
+                        {game.difficulty}
+                      </Badge>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -428,7 +443,7 @@ export default function Games() {
                 </div>
                 <CardHeader>
                   <div className="flex items-start justify-between gap-2">
-                    <div>
+                    <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
                         <CardTitle>{game.title}</CardTitle>
                         {game.type === "Group" && (
@@ -440,9 +455,14 @@ export default function Games() {
                       </div>
                       <CardDescription>{game.description}</CardDescription>
                     </div>
-                    <Badge className={getDifficultyColor(game.difficulty)}>
-                      {game.difficulty}
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                      {isGameCompleted(game.id) && (
+                        <CheckCircle2 className="h-6 w-6 text-green-600 flex-shrink-0" data-testid={`icon-completed-game-${game.id}`} />
+                      )}
+                      <Badge className={getDifficultyColor(game.difficulty)}>
+                        {game.difficulty}
+                      </Badge>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">

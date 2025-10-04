@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "./ThemeToggle";
-import { Leaf, Trophy, User, GraduationCap, LogOut } from "lucide-react";
+import { Leaf, Trophy, User, GraduationCap, LogOut, AlertCircle, Lightbulb, MessageSquare } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import type { User as UserType } from "@shared/schema";
@@ -64,14 +64,27 @@ export function Header() {
               Challenges
             </a>
           </Link>
-          <Link href="/eco-clubs">
-            <a className="text-sm font-medium hover:text-primary transition-colors cursor-pointer">
-              Eco-Clubs
-            </a>
-          </Link>
           <Link href="/games">
             <a className="text-sm font-medium hover:text-primary transition-colors cursor-pointer">
               Games
+            </a>
+          </Link>
+          <Link href="/issues">
+            <a className="text-sm font-medium hover:text-primary transition-colors cursor-pointer flex items-center gap-1">
+              <AlertCircle className="h-4 w-4" />
+              Issues
+            </a>
+          </Link>
+          <Link href="/solutions">
+            <a className="text-sm font-medium hover:text-primary transition-colors cursor-pointer flex items-center gap-1">
+              <Lightbulb className="h-4 w-4" />
+              Solutions
+            </a>
+          </Link>
+          <Link href="/ai-chat">
+            <a className="text-sm font-medium hover:text-primary transition-colors cursor-pointer flex items-center gap-1">
+              <MessageSquare className="h-4 w-4" />
+              AI Chat
             </a>
           </Link>
           {user?.role === "teacher" && (
