@@ -248,12 +248,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/games/completions", requireAuth, async (req, res) => {
+    try {
+      const authReq = req as AuthRequest;
+      const completions = await storage.getGameCompletions(authReq.user!.id);
+      res.json(completions);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
   app.post("/api/games/complete", requireAuth, async (req, res) => {
     try {
       const authReq = req as AuthRequest;
       const { gameId, score } = req.body;
       const completion = await storage.completeGame(authReq.user!.id, gameId, score);
       res.json(completion);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.delete("/api/games/completions/:gameId", requireAuth, async (req, res) => {
+    try {
+      const authReq = req as AuthRequest;
+      const { gameId } = req.params;
+      await storage.deleteGameCompletion(authReq.user!.id, gameId);
+      res.json({ message: "Game completion removed successfully" });
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }

@@ -1,11 +1,27 @@
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import type { User } from "@shared/schema";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Users, GraduationCap, Award, TrendingUp } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Users, GraduationCap, Award, TrendingUp, Gamepad2, Plus } from "lucide-react";
 import { Link } from "wouter";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 export default function TeacherDashboard() {
+  const [createGameDialogOpen, setCreateGameDialogOpen] = useState(false);
+  const [gameTitle, setGameTitle] = useState("");
+  const [gameDescription, setGameDescription] = useState("");
+  const [gameCategory, setGameCategory] = useState("");
+  const [gameDifficulty, setGameDifficulty] = useState("Medium");
+  const [gamePoints, setGamePoints] = useState("100");
+  const { toast } = useToast();
+
   const { data: user, isLoading } = useQuery<User>({
     queryKey: ["/api/auth/me"],
   });
@@ -13,6 +29,52 @@ export default function TeacherDashboard() {
   const { data: students = [] } = useQuery<User[]>({
     queryKey: ["/api/teacher/students"],
   });
+
+  const createGameMutation = useMutation({
+    mutationFn: async (gameData: any) => {
+      return await apiRequest("POST", "/api/teacher/games", gameData);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/games"] });
+      toast({
+        title: "Game Created!",
+        description: "Your new game has been successfully created.",
+      });
+      setCreateGameDialogOpen(false);
+      setGameTitle("");
+      setGameDescription("");
+      setGameCategory("");
+      setGameDifficulty("Medium");
+      setGamePoints("100");
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to create game. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleCreateGame = () => {
+    if (!gameTitle || !gameDescription || !gameCategory) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    createGameMutation.mutate({
+      title: gameTitle,
+      description: gameDescription,
+      category: gameCategory,
+      difficulty: gameDifficulty,
+      points: parseInt(gamePoints),
+      authenticated: false,
+    });
+  };
 
   if (isLoading) {
     return (
@@ -92,13 +154,95 @@ export default function TeacherDashboard() {
             <CardDescription>Manage your students and monitor progress</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-3 gap-4">
               <Link href="/teacher/students">
                 <Button className="w-full" data-testid="button-manage-students">
                   <Users className="h-4 w-4 mr-2" />
                   Manage Students
                 </Button>
               </Link>
+              <Dialog open={createGameDialogOpen} onOpenChange={setCreateGameDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button className="w-full" data-testid="button-create-game">
+                    <Gamepad2 className="h-4 w-4 mr-2" />
+                    Create Game
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle>Create New Game</DialogTitle>
+                    <DialogDescription>
+                      Add a new environmental education game for your students
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 py-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="game-title">Game Title *</Label>
+                      <Input
+                        id="game-title"
+                        placeholder="e.g., Ocean Cleanup Challenge"
+                        value={gameTitle}
+                        onChange={(e) => setGameTitle(e.target.value)}
+                        data-testid="input-game-title"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="game-description">Description *</Label>
+                      <Textarea
+                        id="game-description"
+                        placeholder="Describe the game's objectives and gameplay..."
+                        value={gameDescription}
+                        onChange={(e) => setGameDescription(e.target.value)}
+                        data-testid="textarea-game-description"
+                      />
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="game-category">Category *</Label>
+                        <Input
+                          id="game-category"
+                          placeholder="e.g., Water Conservation"
+                          value={gameCategory}
+                          onChange={(e) => setGameCategory(e.target.value)}
+                          data-testid="input-game-category"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="game-difficulty">Difficulty</Label>
+                        <Select value={gameDifficulty} onValueChange={setGameDifficulty}>
+                          <SelectTrigger data-testid="select-game-difficulty">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Easy">Easy</SelectItem>
+                            <SelectItem value="Medium">Medium</SelectItem>
+                            <SelectItem value="Hard">Hard</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="game-points">Points</Label>
+                      <Input
+                        id="game-points"
+                        type="number"
+                        placeholder="100"
+                        value={gamePoints}
+                        onChange={(e) => setGamePoints(e.target.value)}
+                        data-testid="input-game-points"
+                      />
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setCreateGameDialogOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button onClick={handleCreateGame} disabled={createGameMutation.isPending} data-testid="button-submit-game">
+                      {createGameMutation.isPending ? "Creating..." : "Create Game"}
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
               <Button variant="outline" className="w-full" data-testid="button-view-reports">
                 <TrendingUp className="h-4 w-4 mr-2" />
                 View Progress Reports

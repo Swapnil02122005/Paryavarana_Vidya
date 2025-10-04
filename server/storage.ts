@@ -47,6 +47,7 @@ export interface IStorage {
   createGame(game: InsertGame): Promise<Game>;
   getGameCompletions(userId: string): Promise<GameCompletion[]>;
   completeGame(userId: string, gameId: string, score?: number): Promise<GameCompletion>;
+  deleteGameCompletion(userId: string, gameId: string): Promise<void>;
   
   getEcoClubs(): Promise<EcoClub[]>;
   createEcoClub(club: InsertEcoClub): Promise<EcoClub>;
@@ -198,6 +199,10 @@ export class DbStorage implements IStorage {
     }
     const result = await db.insert(gameCompletions).values({ userId, gameId, score }).returning();
     return result[0];
+  }
+
+  async deleteGameCompletion(userId: string, gameId: string): Promise<void> {
+    await db.delete(gameCompletions).where(and(eq(gameCompletions.userId, userId), eq(gameCompletions.gameId, gameId)));
   }
 
   async getEcoClubs(): Promise<EcoClub[]> {

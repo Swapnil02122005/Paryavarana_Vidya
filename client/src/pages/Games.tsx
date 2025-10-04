@@ -3,9 +3,12 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Gamepad2, Users, Trophy, Clock, Star, AlertTriangle, Shield, Lock, CheckCircle2 } from "lucide-react";
+import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "@/components/ui/context-menu";
+import { Gamepad2, Users, Trophy, Clock, Star, AlertTriangle, Shield, Lock, CheckCircle2, CheckCircle, XCircle } from "lucide-react";
 import { Link } from "wouter";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 import type { GameCompletion } from "@shared/schema";
 import wasteSortingImage from "@assets/stock_images/waste_segregation_so_871ae14e.jpg";
 import solarEnergyImage from "@assets/stock_images/solar_energy_panels__c1f1b8c7.jpg";
@@ -16,6 +19,7 @@ import biodiversityImage from "@assets/stock_images/indian_forest_biodiv_e9bbd8e
 export default function Games() {
   const [difficultyFilter, setDifficultyFilter] = useState<string>("all");
   const userPoints = 2450;
+  const { toast } = useToast();
 
   const { data: gameCompletions = [] } = useQuery<GameCompletion[]>({
     queryKey: ["/api/games/completions"],
@@ -24,6 +28,35 @@ export default function Games() {
   const isGameCompleted = (gameId: number) => {
     return gameCompletions.some((completion) => completion.gameId === String(gameId));
   };
+
+  const markCompleteMutation = useMutation({
+    mutationFn: async (gameId: number) => {
+      return await apiRequest("POST", "/api/games/complete", { 
+        gameId: String(gameId), 
+        score: 100 
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/games/completions"] });
+      toast({
+        title: "Game Marked Complete",
+        description: "This game has been marked as completed.",
+      });
+    },
+  });
+
+  const markIncompleteMutation = useMutation({
+    mutationFn: async (gameId: number) => {
+      return await apiRequest("DELETE", `/api/games/completions/${gameId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/games/completions"] });
+      toast({
+        title: "Game Unmarked",
+        description: "This game has been marked as incomplete.",
+      });
+    },
+  });
 
   const individualGames = [
     {
@@ -352,8 +385,11 @@ export default function Games() {
         <div className="grid gap-4 md:grid-cols-2">
           {filteredIndividualGames.map((game) => {
             const locked = isGameLocked(game.minPoints);
+            const completed = isGameCompleted(game.id);
             return (
-              <Card key={game.id} className={`hover-elevate ${locked ? 'opacity-75' : ''}`} data-testid={`game-${game.id}`}>
+              <ContextMenu key={game.id}>
+                <ContextMenuTrigger asChild>
+                  <Card className={`hover-elevate ${locked ? 'opacity-75' : ''} ${completed ? 'border-green-500' : ''}`} data-testid={`game-${game.id}`}>
                 <div className="relative">
                   <img 
                     src={game.image} 
@@ -414,6 +450,21 @@ export default function Games() {
                   )}
                 </CardContent>
               </Card>
+                </ContextMenuTrigger>
+                <ContextMenuContent>
+                  {completed ? (
+                    <ContextMenuItem onClick={() => markIncompleteMutation.mutate(game.id)} data-testid={`context-unmark-${game.id}`}>
+                      <XCircle className="h-4 w-4 mr-2 text-red-500" />
+                      Mark as Incomplete
+                    </ContextMenuItem>
+                  ) : (
+                    <ContextMenuItem onClick={() => markCompleteMutation.mutate(game.id)} data-testid={`context-mark-${game.id}`}>
+                      <CheckCircle className="h-4 w-4 mr-2 text-green-500" />
+                      Mark as Complete
+                    </ContextMenuItem>
+                  )}
+                </ContextMenuContent>
+              </ContextMenu>
             );
           })}
         </div>
@@ -424,8 +475,11 @@ export default function Games() {
         <div className="grid gap-4 md:grid-cols-2">
           {filteredGroupGames.map((game) => {
             const locked = isGameLocked(game.minPoints);
+            const completed = isGameCompleted(game.id);
             return (
-              <Card key={game.id} className={`hover-elevate border-primary/30 ${locked ? 'opacity-75' : ''}`} data-testid={`game-${game.id}`}>
+              <ContextMenu key={game.id}>
+                <ContextMenuTrigger asChild>
+                  <Card className={`hover-elevate border-primary/30 ${locked ? 'opacity-75' : ''} ${completed ? 'border-green-500' : ''}`} data-testid={`game-${game.id}`}>
                 <div className="relative">
                   <img 
                     src={game.image} 
@@ -494,6 +548,21 @@ export default function Games() {
                   )}
                 </CardContent>
               </Card>
+                </ContextMenuTrigger>
+                <ContextMenuContent>
+                  {completed ? (
+                    <ContextMenuItem onClick={() => markIncompleteMutation.mutate(game.id)} data-testid={`context-unmark-${game.id}`}>
+                      <XCircle className="h-4 w-4 mr-2 text-red-500" />
+                      Mark as Incomplete
+                    </ContextMenuItem>
+                  ) : (
+                    <ContextMenuItem onClick={() => markCompleteMutation.mutate(game.id)} data-testid={`context-mark-${game.id}`}>
+                      <CheckCircle className="h-4 w-4 mr-2 text-green-500" />
+                      Mark as Complete
+                    </ContextMenuItem>
+                  )}
+                </ContextMenuContent>
+              </ContextMenu>
             );
           })}
         </div>
